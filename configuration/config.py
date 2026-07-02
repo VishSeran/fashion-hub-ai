@@ -1,0 +1,1 @@
+IMAGE_MODEL = "openai/clip-vit-base-patch32"
