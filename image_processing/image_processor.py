@@ -1,3 +1,5 @@
+from typing import Optional
+
 from configuration.config import IMAGE_MODEL
 from transformers import CLIPModel, CLIPProcessor
 import torch
@@ -15,3 +17,8 @@ class Image_Model:
         self.processor = CLIPProcessor.from_pretrained(model_name)
         
         self.model.eval()
+        
+    def encode_image(self, image_path:Optional[str],
+                     image_url:Optional[str]):
+        
+        
