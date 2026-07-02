@@ -4,6 +4,9 @@ from configuration.config import IMAGE_MODEL
 from transformers import CLIPModel, CLIPProcessor
 import torch
 
+from configuration.logger import get_logger
+
+logger = get_logger("image-processor")
 
 class Image_Model:
     
@@ -20,5 +23,16 @@ class Image_Model:
         
     def encode_image(self, image_path:Optional[str],
                      image_url:Optional[str]):
+        
+        try:
+            
+            
+        except ValueError as e:
+            logger.error(f"Value error: {e}")
+            raise
+    
+        except Exception as e:
+            logger.error(f"Error in encoding image: {e}")
+            raise
         
         
