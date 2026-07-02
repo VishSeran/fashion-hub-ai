@@ -5,6 +5,8 @@ from transformers import CLIPModel, CLIPProcessor
 import torch
 import io
 from PIL import Image
+import base64
+import faiss
 
 from configuration.logger import get_logger
 
@@ -56,10 +58,17 @@ class Image_Model:
             if image is None:
                 raise ValueError("Error in image feching")
             
+            inputs = self.processor(
+                images=image,
+                return_tensors = "pt"
+            ).to(self.device)
             
-            
-                                 
-            
+            with torch.no_grad():
+                features = self.model.get_image_features(**inputs)
+                features = features/features.norm(dim=-1, keepdim=True)
+                
+            return features.cpu().numpy()
+                                  
         except ValueError as e:
             logger.error(f"Value error: {e}")
             raise
