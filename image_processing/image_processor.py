@@ -1,8 +1,10 @@
 from typing import Optional
-
+import requests
 from configuration.config import IMAGE_MODEL
 from transformers import CLIPModel, CLIPProcessor
 import torch
+import io
+from PIL import Image
 
 from configuration.logger import get_logger
 
@@ -25,7 +27,21 @@ class Image_Model:
                      image_url:Optional[str]):
         
         try:
+            if image_url:
+                image_loaded = requests.get(image_url, 
+                                     timeout=30, 
+                                     stream=True).content
+                
+                image = Image.open(io.BytesIO(image_loaded)).convert("RGB")
+                
             
+            if image_path:
+                image = Image.open(image_path).convert("RGB")
+            
+            if image is None:
+                raise ValueError("Error in image feching")
+            
+                                 
             
         except ValueError as e:
             logger.error(f"Value error: {e}")
