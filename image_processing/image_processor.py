@@ -63,10 +63,13 @@ class Image_Model:
                 return_tensors = "pt"
             ).to(self.device)
             
+            logger.info("input tensor successfully fetched")
+            
             with torch.no_grad():
                 features = self.model.get_image_features(**inputs)
                 features = features/features.norm(dim=-1, keepdim=True)
-                
+            
+            logger.info("features has extracted")
             return features.cpu().numpy()
                                   
         except ValueError as e:
@@ -76,5 +79,7 @@ class Image_Model:
         except Exception as e:
             logger.error(f"Error in encoding image: {e}")
             raise
+        
+
         
         
