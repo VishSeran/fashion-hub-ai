@@ -13,16 +13,31 @@ logger = get_logger("image-processor")
 class Image_Model:
     
     def __init__(self, model_name=IMAGE_MODEL):
-        self.device = torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu")
         
-        self.model = CLIPModel.from_pretrained(
-            model_name).to(self.device)
+        try:
+            
+            if not model_name:
+                raise ValueError("Model name must not be empty")
+            
+            self.device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu")
+            
+            self.model = CLIPModel.from_pretrained(
+                model_name).to(self.device)
+            
+            self.processor = CLIPProcessor.from_pretrained(model_name)
+            
+            self.model.eval()
+            
         
-        self.processor = CLIPProcessor.from_pretrained(model_name)
-        
-        self.model.eval()
-        
+        except ValueError as e:
+            logger.error(f"Value error: {e}")
+            raise
+    
+        except Exception as e:
+            logger.error(f"Error in model initialization: {e}")
+            raise
+            
     def encode_image(self, image_path:Optional[str],
                      image_url:Optional[str]):
         
@@ -40,6 +55,8 @@ class Image_Model:
             
             if image is None:
                 raise ValueError("Error in image feching")
+            
+            
             
                                  
             
