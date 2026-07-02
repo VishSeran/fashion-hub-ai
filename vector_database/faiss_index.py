@@ -1,5 +1,4 @@
 import faiss
-
 from configuration.logger import get_logger
 
 logger = get_logger("faiss-index")
@@ -9,7 +8,19 @@ class FaissIndex:
         self.index = faiss.IndexFlatIP(dim)
         
     def add(self, embeddings):
-        self.index.add(embeddings)
+        try:
+            if not embeddings:
+                raise ValueError("image embeddings are empty or none")
+            
+            self.index.add(embeddings)
+            
+        except ValueError as e:
+            logger.error(f"Value error: {e}")
+            raise
+    
+        except Exception as e:
+            logger.error(f"Error in encoding image: {e}")
+            raise
         
     def search(self, query_embedding, k=5):
         
