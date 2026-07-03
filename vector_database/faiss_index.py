@@ -1,13 +1,18 @@
 import faiss
 from configuration.logger import get_logger
+from langchain_community.document_loaders import WebBaseLoader
 
 logger = get_logger("faiss-index")
+
+
+
 class FaissIndex:
     
     def __init__(self, dim=512):
         self.index = faiss.IndexFlatIP(dim)
         
     def add(self, embeddings):
+        
         try:
             if not embeddings:
                 raise ValueError("image embeddings are empty or none")
